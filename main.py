@@ -36,13 +36,12 @@ def grupy():
         with open (tmp_grp,"r") as grp_file:
             groups = sorted(set(line.strip() for line in grp_file if line.strip()))
 
-    print("============RAPORT GRUP============")
+    print("============SUMMARY============")
     for i, group in enumerate(groups, start = 1):
         print("----------")
-        subprocess.run(["net", "group", group, "/domain"], text = True)
+        subprocess.run(["net", "group", group, "/domain"], text = True, stderr=subprocess.DEVNULL)
         print("\n")
-
-
+       
 if __name__ == "__main__":
     grupy()
 
