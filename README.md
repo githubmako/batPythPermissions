@@ -2,9 +2,11 @@
 
 ## Import files from Git:
 
-### cd Path/To/Your/Folder
-### git init
-### git clone https://github.com/githubmako/batPdfTest
+```bash
+cd Path/To/Your/Folder
+git init
+git clone https://github.com/githubmako/batPdfTest
+```
 
 ## BAT files
 
@@ -14,6 +16,7 @@
 
 ### Import necessary libaries:
 
-### pip install os_sys
-
+```bash
+pip install os_sys
+```
 ### Compile and provide folder's path to check
