@@ -1,10 +1,13 @@
 import os
 import subprocess 
+import json
 from tempfile import gettempdir 
+from pathlib import Path
+
 
 def grupy():
-    folders = input("Provide folder paths (ex: F:\ak_collection): ").split()
 
+    folders = input("Provide folder paths (ex: F:\ak_collection): ").split()
     tmp_acl = os.path.join(gettempdir(), "_acl_lines.txt")
     tmp_grp = os.path.join(gettempdir(), "_grupy_all.txt")
 
@@ -18,8 +21,6 @@ def grupy():
             print(f"Processing: {folder}")
             with open (tmp_acl,"w") as acl_file:
                 subprocess.run(["icacls", folder], stdout = acl_file, text = True)
-
-
 
             with open(tmp_acl, "r") as acl_file, open(tmp_grp, "a") as grp_file:
                 for line in acl_file:
@@ -42,8 +43,64 @@ def grupy():
         subprocess.run(["net", "group", group, "/domain"], text = True, stderr=subprocess.DEVNULL)
         print("\n")
        
+def uprawnienia(folders):
+
+    folders = input("Provide folder paths (ex: F:\ak_collection): ").split()
+    raw_json_path = Path.home() / "Desktop" / "uprawnienia.json"
+    final_json_path = Path.home() / "Desktop" / "uprawnienia_parsed.json"
+    tmp_acl_path = Path(gettempdir()) / "_acl_lines.txt"
+
+
+    for file_path in [tmp_acl_path, raw_json_path, final_json_path]:
+        if file_path.exists():
+            file_path.unlink()
+    
+    raw_json_path = []
+    raw_json_data = []
+
+    for folder in folders:
+        if os.path.exists(folder):
+            print(f"Processing: {folder}")
+
+            with open(tmp_acl_path,"w") as acl_file:
+                subprocess.run(["icacls", folder], stdout = acl_file, text = True)
+
+            with open(tmp_acl_path, "r") as acl_file:
+                acl_lines = [line.strip() for line in acl_file if line.strip()]
+            
+            raw_json_data.append({
+
+            "Path:": folder, 
+                "Acl:": acl_lines
+
+            })
+        else:
+            print(f"Folder doesnt exist:{folder}")
+    
+    with open (raw_json_path, "w", encoding = "utf-8") as raw_json_file:
+        print("nkjernoer")
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 if __name__ == "__main__":
-    grupy()
+    grupy(folders)
+   
+
+
+
 
 
 
