@@ -96,7 +96,7 @@ def uprawnienia(folders):
 
 
 if __name__ == "__main__":
-    grupy(folders)
+    grupy()
    
 
 
