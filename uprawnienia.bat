@@ -54,5 +54,4 @@ powershell -NoProfile -Command ^
  $aclData | ConvertTo-Json -Depth 5 | Set-Content -Path '%FINALJSON%' -Encoding UTF8
 
 echo.
-echo Gotowe. Sprawdź plik: %FINALJSON%
 pause
