@@ -44,35 +44,35 @@ def grupy():
         print("\n")
 
 def uprawnienia():
-    # Pobranie ścieżek folderów od użytkownika
+ 
     folders = input("Provide folder paths separated by spaces (ex: F:\\ak_collection G:\\test): ").split()
     
-    # Ścieżki do plików
+    
     raw_json_path = Path.home() / "Desktop" / "uprawnienia.json"
     final_json_path = Path.home() / "Desktop" / "uprawnienia_parsed.json"
     tmp_acl_path = Path(gettempdir()) / "_acl_lines.txt"
 
-    # Usunięcie istniejących plików
+    
     for file_path in [tmp_acl_path, raw_json_path, final_json_path]:
         if file_path.exists():
             file_path.unlink()
 
     raw_json_data = []
 
-    # Przetwarzanie folderów
+ 
     for folder in folders:
         if os.path.exists(folder):
             print(f"Processing: {folder}")
 
-            # Zapis wyników icacls do pliku tymczasowego
+           
             with open(tmp_acl_path, "w") as acl_file:
                 subprocess.run(["icacls", folder], stdout=acl_file, text=True)
 
-            # Odczytanie wyników z pliku tymczasowego
+          
             with open(tmp_acl_path, "r") as acl_file:
                 acl_lines = [line.strip() for line in acl_file if line.strip()]
 
-            # Dodanie danych do listy JSON
+            
             raw_json_data.append({
                 "Path": folder,
                 "Acl": acl_lines
@@ -80,21 +80,21 @@ def uprawnienia():
         else:
             print(f"Folder doesn't exist: {folder}")
 
-    # Zapisanie surowych danych JSON do pliku
+  
     with open(raw_json_path, "w", encoding="utf-8") as raw_json_file:
         json.dump(raw_json_data, raw_json_file, indent=4)
 
-    # Przetwarzanie danych JSON w Pythonie
+  
     final_json_data = []
     for entry in raw_json_data:
-        # Usunięcie linii zawierających "Successfully processed"
+
         filtered_acl = [line for line in entry["Acl"] if "Successfully processed" not in line]
         final_json_data.append({
             "Path": entry["Path"],
             "Acl": filtered_acl
         })
 
-    # Zapisanie przetworzonych danych JSON do pliku
+    
     with open(final_json_path, "w", encoding="utf-8") as final_json_file:
         json.dump(final_json_data, final_json_file, indent=4)
 
